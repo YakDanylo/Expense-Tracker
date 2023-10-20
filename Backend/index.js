@@ -5,7 +5,7 @@ const mongoose = require("mongoose")
 const PORT = 5000
 const Transaction = require("./models/transaction")
 
-const db ='mongodb+srv://alatp574:123456789a@cluster1.rqnkebz.mongodb.net/?retryWrites=true&w=majority'
+const db ='mongodb+srv://alatp574:password@cluster1.rqnkebz.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose
     .connect(db,{useNewUrlParser:true, useUnifiedTopology:true})
