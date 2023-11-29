@@ -6,25 +6,7 @@ import MonthStatistics from '../components/MonthStatistics'
 import { AuthContext } from '../context/AuthContext'
 import React,{useContext, useEffect,useState} from 'react'
 import { useIsFocused } from '@react-navigation/native'
-function groupByDayOfMonth(objects) {
-    const groups = {};
-  
-    for (const obj of objects) {
-      const date = new Date(obj.date); // Перетворюємо рядок 'date' в об'єкт Date
-      const dayOfMonth = date.getDate(); // Отримуємо день місяця
-  
-      if (dayOfMonth in groups) {
-        groups[dayOfMonth].push(obj);
-      } else {
-        groups[dayOfMonth] = [obj];
-      }
-    }
-  
-    const result = Object.values(groups);
-  
-    return result;
-  }
- 
+import {MY_IP} from '@env'
   const Months = ["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
 const Home = () => {
     const {user} = useContext(AuthContext)
@@ -32,7 +14,7 @@ const Home = () => {
     const [choosedMonth,setChoosedMonth] = useState(new Date().getMonth())
     const isFocused = useIsFocused()
     useEffect(() => {
-        fetch(`http://192.168.1.2:3000/gettotal?month=${choosedMonth}&userId=${user._id}`)
+        fetch(`http://${MY_IP}:3000/gettotal?month=${choosedMonth}&userId=${user._id}`)
             .then((response) => {
                 if (!response.ok) {
                 throw new Error("Network response was not ok");

@@ -10,7 +10,7 @@ import { useEffect,useState,useContext } from "react"
 import { AuthContext } from "../context/AuthContext"
 import { COLORS } from "../constants/COLORS"
 import { useIsFocused } from "@react-navigation/native"
-
+import {MY_IP} from '@env'
 function groupByDayOfMonth(objects) {
   const groups = {};
 
@@ -38,7 +38,7 @@ const Transactions = ({navigation}) => {
     const {user} = useContext(AuthContext)
     const isFocused = useIsFocused()
     useEffect(() => {
-        fetch(`http://192.168.1.2:3000/get?month=${choosedMonth}&userId=${user._id}`)
+        fetch(`http://${MY_IP}:3000/get?month=${choosedMonth}&userId=${user._id}`)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Network response was not ok");

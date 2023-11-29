@@ -4,6 +4,7 @@ import CustomButton from '../UI/CustomButton'
 import AuthSaveButton from '../UI/AuthCustomButton'
 import { COLORS } from '../constants/COLORS'
 import { AuthContext } from '../context/AuthContext'
+import {MY_IP} from '@env'
 const Authentification = ({auth}) => {
     const [isRegistered,setIsRegistered] = useState(true)
     const [userInfo,setUserInfo] = useState({email:"",password:""})
@@ -20,14 +21,14 @@ const Authentification = ({auth}) => {
         {
             // console.log(userInfo,"here")
             // User registration
-            fetch("http://192.168.1.2:3000/register",{
+            fetch(`http://${MY_IP}:3000/register`,{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify(userInfo)
             })
-            fetch(`http://192.168.1.2:3000/login?email=${userInfo.email}&password=${userInfo.password}`)
+            fetch(`http://${MY_IP}:3000/login?email=${userInfo.email}&password=${userInfo.password}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -48,7 +49,7 @@ const Authentification = ({auth}) => {
         else 
         {
             // User authorisation
-            fetch(`http://192.168.1.2:3000/login?email=${userInfo.email}&password=${userInfo.password}`)
+            fetch(`http://${MY_IP}:3000/login?email=${userInfo.email}&password=${userInfo.password}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
