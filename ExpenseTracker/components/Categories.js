@@ -1,21 +1,21 @@
 import { View,Text,StyleSheet } from "react-native"
 import CategoryButton from "../UI/CategoryButton"
 
+const Categories = ({month}) => {
 
-const Categories = () => {
   return (
         <View style={styles.wrapper}>
             <View style={styles.row}>
-            <CategoryButton icon="fast-food" name={"Food"}/> 
-            <CategoryButton icon="car" name={"Transport"}/> 
-            <CategoryButton icon="shirt" name={"Clothes"}/> 
-            <CategoryButton icon="heart" name={"Health"}/> 
+            <CategoryButton choosedMonth={month} value={"Food"} icon="fast-food" name={"Їжа"}/> 
+            <CategoryButton choosedMonth={month} value={"Transport"} icon="car" name={"Транспорт"}/> 
+            <CategoryButton choosedMonth={month} value={"Clothes"} icon="shirt" name={"Одяг"}/> 
+            <CategoryButton choosedMonth={month} value={"Health"} icon="heart" name={"Здоров'я"}/> 
             </View>
             <View style={styles.row}>
-            <CategoryButton icon="gift" name={"Presents"}/> 
-            <CategoryButton icon="american-football" name={"Entertaiment"}/> 
-            <CategoryButton icon="book" name={"Education"}/> 
-            <CategoryButton icon="bicycle" name={"Hobby"}/> 
+            <CategoryButton choosedMonth={month} value={"Gifts"} icon="gift" name={"Подарунки"}/> 
+            <CategoryButton choosedMonth={month} value={"entertainment"} icon="american-football" name={"Розваги"}/> 
+            <CategoryButton choosedMonth={month} value={"Education"} icon="book" name={"Освіта"}/> 
+            <CategoryButton choosedMonth={month} value={"Other"} icon="ellipsis-horizontal" name={"Інше"}/>
             </View> 
         </View>
   )

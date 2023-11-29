@@ -1,46 +1,89 @@
 import { Ionicons } from '@expo/vector-icons'
-import {View,Text,StyleSheet,Image} from 'react-native'
+import {View,Text,StyleSheet,Image, ScrollView} from 'react-native'
 import CircleComponents from '../UI/CircleComponents'
 import Categories from '../components/Categories'
-import TodayExpenses from '../components/TodayExpenses'
+import MonthStatistics from '../components/MonthStatistics'
+import { AuthContext } from '../context/AuthContext'
+import React,{useContext, useEffect,useState} from 'react'
+import { useIsFocused } from '@react-navigation/native'
+function groupByDayOfMonth(objects) {
+    const groups = {};
+  
+    for (const obj of objects) {
+      const date = new Date(obj.date); // Перетворюємо рядок 'date' в об'єкт Date
+      const dayOfMonth = date.getDate(); // Отримуємо день місяця
+  
+      if (dayOfMonth in groups) {
+        groups[dayOfMonth].push(obj);
+      } else {
+        groups[dayOfMonth] = [obj];
+      }
+    }
+  
+    const result = Object.values(groups);
+  
+    return result;
+  }
+ 
+  const Months = ["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
 const Home = () => {
+    const {user} = useContext(AuthContext)
+    const [transactionsValues,setTransactionsValues] = useState({income:0,expense:0})
+    const [choosedMonth,setChoosedMonth] = useState(new Date().getMonth())
+    const isFocused = useIsFocused()
+    useEffect(() => {
+        fetch(`http://192.168.1.2:3000/gettotal?month=${choosedMonth}&userId=${user._id}`)
+            .then((response) => {
+                if (!response.ok) {
+                throw new Error("Network response was not ok");
+                }
+                return response.json(); 
+            })
+            .then((resp) => {
+                setTransactionsValues(resp)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [isFocused])
+
   return (
-    <View>
+    <ScrollView>
         <View style={styles.userGreetingContainer}>
             <Image style={styles.userImage} source={require("../assets/UserImage.png")} />
             <View style={styles.greetingContainer}>
             <Text>Welcome back </Text>
-            <Text>UserName</Text>
+            <Text>{user.email}</Text>
             </View>
-            <Ionicons name='barbell' size={24}/>
+            <Ionicons name='notifications-sharp' size={24}/>
         </View>
         <View style={styles.currentBalanceContainer}>
             <View style={styles.balanceTextContainer}>
-                <Text style={{color:'white'}}>Available</Text>
-                <Text style={{color:'white', fontSize:32,}}>$25.000</Text>
+                <Text style={{color:'white'}}>Доступно</Text>
+                <Text style={{color:'white', fontSize:32,}}>{transactionsValues.income-transactionsValues.expense}₴</Text>
                 <View style={{flexDirection:'row', backgroundColor:'#6653e7',padding:1,borderRadius:8,}}>
                     <View style={styles.moneyContainer}>
-                    <Text style={{color:'white'}}>Earned</Text>
-                    <Text style={{color:'white'}}>$100.000</Text>
+                    <Text style={{color:'white'}}>Зароблено</Text>
+                    <Text style={{color:'white'}}>{transactionsValues.income}₴</Text>
                     </View>
                     <View style={styles.moneyContainer}>
-                    <Text style={{color:'white'}}>Spent</Text>
-                    <Text style={{color:'white'}}>$75.000</Text>
+                    <Text style={{color:'white'}}>Потрачено</Text>
+                    <Text style={{color:'white'}}>{transactionsValues.expense}₴</Text>
                     </View>
                 </View>
             </View>
             <View style={styles.circleContainer}>
-                <CircleComponents earned={100000} expensed={75000} />
-                <Text style={{color:'white', fontSize:16,}}>September</Text>
+                <CircleComponents earned={transactionsValues.income} expensed={transactionsValues.expense} />
+                <Text style={{color:'white', fontSize:16}}>{Months[choosedMonth]}</Text>
             </View>
         </View>
         <View>
-            <Categories/>
+            <Categories month={choosedMonth}/>
         </View>
         <View>
-            <TodayExpenses/>
+            <MonthStatistics month = {choosedMonth}/>
         </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -71,8 +114,6 @@ const styles = StyleSheet.create({
         padding:40,
     },
     moneyContainer:{
-        justifyContent:'center',
-        alignItems:'center',
         marginRight:5,
     },
     circle:{

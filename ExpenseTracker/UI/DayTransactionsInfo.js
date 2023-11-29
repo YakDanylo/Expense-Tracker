@@ -1,25 +1,45 @@
-import { View,Text,StyleSheet } from "react-native"
+import { View,Text,StyleSheet,ScrollView } from "react-native"
 import { FlatList,Platform } from "react-native"
 import { COLORS } from "../constants/COLORS";
-function DayOfWeek(day)
-{
-    const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
-    return days[day-1]
-}
+import { useState,useEffect } from "react";
+
+    const days = ['Неділя','Понеділок','Вівторок','Середа','Четвер','П\'ятниця','Субота']
+
+
 const DayTransactionsInfo = ({ data }) => {
+    const [totalIncome,setTotalIncome] = useState(0)
+    const [totalExpense,setTotalExpense] = useState(0)
+
+    useEffect(() => {
+        let income = 0
+        let expense = 0
+        data.forEach(element => {
+            if(element.transType==='income')
+            {
+                income+=element.amount
+            }
+            else
+            {
+                expense+=element.amount
+            }
+        });
+        setTotalIncome(income)
+        setTotalExpense(expense)
+    }, [])
+
     function renderItem(itemData) {
         return (
-            <View style={styles.itemsDayContainer}>
+            <View style={styles.itemsDayContainer} key={itemData._id}>
                 <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
                 <View style={{marginRight:5}}>
-                    <Text style={{fontSize:12, color:COLORS.accent100}}>{itemData.item.category}</Text>
+                    <Text style={{fontSize:12, color:COLORS.accent100}}>{itemData.category}</Text>
                 </View>
                 <View style={{marginRight:5}}>
-                    <Text style={{fontSize:18,}}>{itemData.item.title}</Text>
+                    <Text style={{fontSize:18,}}>{itemData.title}</Text>
                 </View>
                 </View>
                 <View>
-                    <Text style={{color:itemData.item.type==='income'?'#20ba53':'#e62c44'}}>${itemData.item.amount}</Text>
+                    <Text style={{color:itemData.transType==='income'?'#20ba53':'#e62c44'}}>₴{itemData.amount}</Text>
                 </View>
             </View>
         );
@@ -29,16 +49,21 @@ const DayTransactionsInfo = ({ data }) => {
         <View style={styles.shadow}>
         <View style={styles.outerWrapper}>
             <View style={styles.totalDayInfo}>
-                <View style={{flexDirection:'row'}}>
-                    <Text style={{marginRight:5}}>{data[0].date.getDate()}</Text>
-                    <Text>{DayOfWeek(data[0].date.getDay())}</Text>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                <Text style={styles.dayOfMonth}>{data[0].date.slice(8,10)}</Text>
+                <Text style={{fontSize:16}}>{days[new Date(data[0].date).getDay()]}</Text>
                 </View>
-                <Text style={{color:'#20ba53'}}>$ 159</Text>
-                <Text style={{color:'#e62c44'}}>$ 238</Text>
+                <View style={{flexDirection:'row'}}>
+                    <Text style={{color:'#20ba53',marginHorizontal:5,}}>₴{totalIncome}</Text>
+                    <Text style={{color:'#e62c44',marginHorizontal:5}}>₴{totalExpense}</Text>
+                </View>
+
             </View>
-            <View>
-                <FlatList data={data} renderItem={renderItem} keyExtractor={(item)=>item.id} />
-            </View>
+            <ScrollView>
+                {data.map((item)=>{
+                    return renderItem(item)
+                })}            
+            </ScrollView>
         </View>
         </View>
     );
@@ -49,9 +74,9 @@ export default DayTransactionsInfo;
 const styles = StyleSheet.create({
     totalDayInfo: {
         flexDirection: "row",
-        justifyContent: "space-between",
         marginHorizontal:5 ,
-        padding:5,
+        marginVertical:5,
+        justifyContent: "space-between",
         
     },
     itemsDayContainer: {
@@ -76,7 +101,19 @@ const styles = StyleSheet.create({
             },
         shadowOpacity: 0.3,
         shadowRadius: 1,
-
         elevation: 7,
+        },
+
+        dayOfMonth:{
+            fontSize:16,
+            fontWeight:'bold',
+            color:'white',
+            backgroundColor:COLORS.accent100,
+            borderRadius:10,
+            padding:3,
+            marginLeft:5,
+            marginRight:10,
+            marginTop:3,
+            overflow:'hidden'
         },
 });

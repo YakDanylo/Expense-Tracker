@@ -1,11 +1,16 @@
 import { Ionicons } from "@expo/vector-icons"
 import { COLORS } from "../constants/COLORS"
 import { StyleSheet,View, Text,Pressable } from "react-native"
+import { useNavigation } from '@react-navigation/native';
 
-
-const CategoryButton = ({icon,name}) => {
+const CategoryButton = ({icon,name,value,onPress,choosedMonth}) => {
+    const navigation = useNavigation()
+    function goToCategory()
+    {
+        navigation.navigate('CategoryScreen', {value:value,choosedMonth:choosedMonth,name:name})
+    }
   return (
-    <Pressable onPress={e=>console.log(icon)}>
+    <Pressable onPress={goToCategory}>
     <View style={styles.wrapper}>
         <View style={styles.icon}>
         <Ionicons name={icon} size={24} color={COLORS.primary100}/>

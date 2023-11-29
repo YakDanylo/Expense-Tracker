@@ -1,8 +1,8 @@
 import { View,Text,Pressable } from "react-native"
-const CustomButton = ({children, color, onPress}) => {
+const CustomButton = ({children, color, onPress,size=14}) => {
   return (
     <Pressable onPress={onPress}>
-        <Text style={{color:color}}>{children}</Text>
+        <Text style={{color:color,fontSize:size}}>{children}</Text>
     </Pressable>
   )
 }

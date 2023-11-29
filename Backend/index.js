@@ -1,33 +1,16 @@
-const express = require("express")
-const app = express()
-const path = require("path")
-const mongoose = require("mongoose")
-const PORT = 5000
-const Transaction = require("./models/transaction")
+const express = require('express');
+const app = express();
+const port = 5000;
+const { run, addUser } = require("./server.js"); // Імпортуємо run та addUser
 
-const db ='mongodb+srv://alatp574:password@cluster1.rqnkebz.mongodb.net/?retryWrites=true&w=majority'
+app.get('/add', (req, res) => {
+    addUser("Oleksii").then(() => {
+        res.send('User added!');
+    }).catch(error => {
+        res.status(500).send('An error occurred: ' + error.message);
+    });
+});
 
-mongoose
-    .connect(db,{useNewUrlParser:true, useUnifiedTopology:true})
-    .then((res)=>console.log("Connected to DB"))
-    .catch((error)=>console.log(error))
-app.get('/', (req,res)=>
-{
-    res.json({id:1,name:"Stepan", surname:"Wick"})
-    
-})
-
-app.post('/add-transaction', (req,res)=>
-{
-    const {text,date,transType,amount} = req.body
-    const transaction = new Transaction({text,date,transType,amount})
-    transaction
-    .save()
-    .then((result)=>res.send(result))
-    .catch((err)=>console.log(err))
-})
-
-app.listen(PORT, ()=>
-{
-    console.log("Server is running on port: " + PORT);
-})
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
