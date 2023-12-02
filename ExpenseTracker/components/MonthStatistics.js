@@ -23,7 +23,7 @@ const sliceColor = [
 const MonthStatistics = ({month}) => {
     const {user} = useContext(AuthContext)
     const {theme} = useContext(ThemeContext)
-    const [transactionsValues,setTransactionsValues] = useState([1,2])
+    const [transactionsValues,setTransactionsValues] = useState([1,1])
     const [categories,setCategories] = useState([])
     const isFocused = useIsFocused()
     useEffect(() => {

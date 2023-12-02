@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "expenseTracker",
-    "slug": "expenseTracker",
+    "slug": "expense-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yakdanylo.expensetracker"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8f85aad7-9dc1-4853-bf23-f258d0bcda79"
+      }
+    },
+    "owner": "yakdanylo"
   }
 }
