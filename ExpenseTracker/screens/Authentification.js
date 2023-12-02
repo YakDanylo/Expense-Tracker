@@ -4,7 +4,7 @@ import CustomButton from '../UI/CustomButton'
 import AuthSaveButton from '../UI/AuthCustomButton'
 import { COLORS } from '../constants/COLORS'
 import { AuthContext } from '../context/AuthContext'
-import {MY_IP} from '@env'
+import {MY_IP,API_URL} from '@env'
 const Authentification = ({auth}) => {
     const [isRegistered,setIsRegistered] = useState(true)
     const [userInfo,setUserInfo] = useState({email:"",password:""})
@@ -31,14 +31,14 @@ const Authentification = ({auth}) => {
                 alert("Невірний формат електронної пошти")
                 return
             }
-            fetch(`http://${MY_IP}:3000/register`,{
+            fetch(`${API_URL}/register`,{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify(userInfo)
             })
-            fetch(`http://${MY_IP}:3000/login?email=${userInfo.email}&password=${userInfo.password}`)
+            fetch(`${API_URL}/login?email=${userInfo.email}&password=${userInfo.password}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -48,6 +48,7 @@ const Authentification = ({auth}) => {
                 .then((resp) => {
                     if(resp)
                     {
+                        console.log(resp)
                         setUser(resp)  
                     }
                     else 
@@ -59,7 +60,7 @@ const Authentification = ({auth}) => {
         else 
         {
             // User authorisation
-            fetch(`http://${MY_IP}:3000/login?email=${userInfo.email}&password=${userInfo.password}`)
+            fetch(`${API_URL}/login?email=${userInfo.email}&password=${userInfo.password}`)
             .then((response) => {
                 if (!response.ok) {
                     

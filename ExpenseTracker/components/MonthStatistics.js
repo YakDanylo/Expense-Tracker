@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useState,useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useIsFocused } from '@react-navigation/native'
-import {MY_IP} from '@env'
+import {MY_IP, API_URL} from '@env'
 import { ThemeContext } from "../context/ThemeContext";
 
 const widthAndHeight = 200
@@ -27,7 +27,7 @@ const MonthStatistics = ({month}) => {
     const [categories,setCategories] = useState([])
     const isFocused = useIsFocused()
     useEffect(() => {
-        fetch(`http://${MY_IP}:3000/getcategoriesvalues?month=${month}&userId=${user._id}`)
+        fetch(`${API_URL}/getcategoriesvalues?month=${month}&userId=${user._id}`)
             .then((response) => {
                 if (!response.ok) {
                 throw new Error("Network response was not ok");

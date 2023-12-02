@@ -9,7 +9,7 @@ import CustomIconButton from "../UI/CustomIconButton"
 import { AuthContext } from "../context/AuthContext"
 import { COLORS } from "../constants/COLORS"
 import { useIsFocused } from "@react-navigation/native"
-import {MY_IP} from '@env'
+import {MY_IP,API_URL} from '@env'
 import { useEffect,useState,useContext } from "react"
 import { ThemeContext } from "../context/ThemeContext"
 function groupByDayOfMonth(objects) {
@@ -41,7 +41,7 @@ const Transactions = ({navigation}) => {
     const {theme} = useContext(ThemeContext)
     let colors = {}
     useEffect(() => {
-        fetch(`http://${MY_IP}:3000/get?month=${choosedMonth}&userId=${user._id}`)
+        fetch(`${API_URL}/get?month=${choosedMonth}&userId=${user._id}`)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Network response was not ok");

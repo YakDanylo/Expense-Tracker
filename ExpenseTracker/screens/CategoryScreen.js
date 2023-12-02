@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext'
 import { ScrollView } from 'react-native-gesture-handler'
 import DayTransactionsInfo from '../UI/DayTransactionsInfo'
 import { COLORS } from '../constants/COLORS'
-import {MY_IP} from '@env'
+import {MY_IP,API_URL} from '@env'
 import { ThemeContext } from '../context/ThemeContext'
 function groupByDayOfMonth(objects) {
     const groups = {};
@@ -30,7 +30,7 @@ const CategoryScreen = ({route}) => {
     const [transactions,setTransactions] = useState([])
     const {theme} = useContext(ThemeContext)
     useEffect(() => {
-        fetch(`http://${MY_IP}:3000/getbycategory?month=${choosedMonth}&userId=${user._id}&category=${value}`)
+        fetch(`${API_URL}/getbycategory?month=${choosedMonth}&userId=${user._id}&category=${value}`)
         .then((response) => {
             if (!response.ok) {
             throw new Error("Network response was not ok");

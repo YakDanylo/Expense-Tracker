@@ -6,7 +6,7 @@ import MonthStatistics from '../components/MonthStatistics'
 import { AuthContext } from '../context/AuthContext'
 import React,{useContext, useEffect,useState} from 'react'
 import { useIsFocused } from '@react-navigation/native'
-import {MY_IP} from '@env'
+import {MY_IP,API_URL} from '@env'
 import { ThemeContext } from '../context/ThemeContext'
 import {darkThemeColors} from '../constants/darkThemeColors'
 import {whiteThemeColors} from '../constants/whiteThemeColors'
@@ -18,7 +18,7 @@ const Home = () => {
     const [choosedMonth,setChoosedMonth] = useState(new Date().getMonth())
     const isFocused = useIsFocused()
     useEffect(() => {
-        fetch(`http://${MY_IP}:3000/gettotal?month=${choosedMonth}&userId=${user._id}`)
+        fetch(`${API_URL}/gettotal?month=${choosedMonth}&userId=${user._id}`)
             .then((response) => {
                 if (!response.ok) {
                 throw new Error("Network response was not ok");

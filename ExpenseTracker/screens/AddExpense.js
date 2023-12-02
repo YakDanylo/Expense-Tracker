@@ -4,7 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dropdown } from 'react-native-element-dropdown';
 import CustomSaveButton from "../components/UI/CustomSaveButton";
 import { AuthContext } from "../context/AuthContext";
-import {MY_IP} from '@env'
+import {MY_IP,API_URL} from '@env'
 import { ThemeContext } from "../context/ThemeContext";
 const AddExpense = () => {
     const [typeOfInput,setTypeOfInput] = useState('expense')
@@ -73,7 +73,7 @@ const AddExpense = () => {
             alert('Заповніть всі поля!')
             return
         }
-        fetch(`http://${MY_IP}:3000/add?userId=${user._id}`,{
+        fetch(`${API_URL}/add?userId=${user._id}`,{
             method:'POST',
             headers: {
                 "Content-Type": "application/json",

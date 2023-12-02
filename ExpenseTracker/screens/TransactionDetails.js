@@ -1,13 +1,13 @@
 import {View,Text,StyleSheet, TextInput, Pressable} from 'react-native'
 import { useContext,useState,useRef } from 'react'
-import { ThemeContext } from '../context/ThemeContext'
-import { COLORS } from '../constants/COLORS'
-import CustomSaveButton from '../components/UI/CustomSaveButton'
+import { ThemeContext } from '../context/ThemeContext';
+import { COLORS } from '../constants/COLORS';
+import CustomSaveButton from '../components/UI/CustomSaveButton';
 import {Dimensions} from 'react-native';
 import { Ionicons } from '@expo/vector-icons'
 import CustomDeleteButton from '../components/UI/CustomDeleteButton'
 import { TouchableWithoutFeedback,Keyboard } from 'react-native'
-import {MY_IP} from '@env'
+import {MY_IP,API_URL} from '@env'
 import { useNavigation } from '@react-navigation/native'
 const TransactionDetails = ({route}) => {
     const navigation = useNavigation()
@@ -64,7 +64,7 @@ const TransactionDetails = ({route}) => {
         {
             alert('Заповніть всі поля')
         }
-        fetch(`http://${MY_IP}:3000/edittransaction`, {
+        fetch(`${API_URL}/edittransaction`, {
             method:'PUT',
             headers:{
                 'Content-Type':'application/json'
@@ -84,7 +84,7 @@ const TransactionDetails = ({route}) => {
 
     function deleteTransaction()
     {
-        fetch(`http://${MY_IP}:3000/deletetransaction`, {
+        fetch(`${API_URL}/deletetransaction`, {
             method:'DELETE',
             headers:{
                 'Content-Type':'application/json'
