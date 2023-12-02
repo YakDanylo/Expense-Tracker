@@ -7,6 +7,8 @@ import { useState,useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useIsFocused } from '@react-navigation/native'
 import {MY_IP} from '@env'
+import { ThemeContext } from "../context/ThemeContext";
+
 const widthAndHeight = 200
 const sliceColor = [
     '#2a9ecf',
@@ -20,7 +22,8 @@ const sliceColor = [
 ]
 const MonthStatistics = ({month}) => {
     const {user} = useContext(AuthContext)
-    const [transactionsValues,setTransactionsValues] = useState([1])
+    const {theme} = useContext(ThemeContext)
+    const [transactionsValues,setTransactionsValues] = useState([1,2])
     const [categories,setCategories] = useState([])
     const isFocused = useIsFocused()
     useEffect(() => {
@@ -32,7 +35,7 @@ const MonthStatistics = ({month}) => {
                 return response.json(); 
             })
             .then((resp) => {
-                if (resp.length==0)
+                if (resp.length==0||resp[0].value==0)
                 {
                     return
                 }
@@ -47,6 +50,29 @@ const MonthStatistics = ({month}) => {
                 console.error(error);
             });
     },[isFocused])
+
+
+    const styles = StyleSheet.create({
+        wrapper: {
+            margin: 20,
+            borderRadius: 8,
+            overflow: "hidden",
+            backgroundColor:theme.secondary,
+            flexDirection:'row'
+        },
+        pie:{
+            justifyContent:'center',
+            alignItems:'center',
+            marginHorizontal:20,
+            marginVertical:20,
+        },
+        legend:{
+            justifyContent:'space-around',
+            marginVertical:20,
+        }
+        
+    });
+
     return (
         <View style={styles.wrapper}>
             <View style={styles.pie}>
@@ -55,14 +81,14 @@ const MonthStatistics = ({month}) => {
                 series={transactionsValues}
                 sliceColor={sliceColor.slice(0,transactionsValues.length)}
                 coverRadius={0.45}
-                coverFill={'#FFF'}
+                coverFill={theme.secondary}
                 />
             </View>
             <View style={styles.legend}>
                 {categories.map((item,index)=>{
                     return <View style={{flexDirection:'row',alignItems:'center'}} key={index}>
                         <View style={{width:10,height:10,backgroundColor:sliceColor[index],marginRight:10,borderRadius:10}}></View>
-                        <Text>{item}</Text>
+                        <Text style={{color:theme.opposite}}>{item}</Text>
                     </View>
 
                 })}
@@ -73,23 +99,3 @@ const MonthStatistics = ({month}) => {
 
 export default MonthStatistics;
 
-const styles = StyleSheet.create({
-    wrapper: {
-        margin: 20,
-        borderRadius: 8,
-        overflow: "hidden",
-        backgroundColor: "white",
-        flexDirection:'row'
-    },
-    pie:{
-        justifyContent:'center',
-        alignItems:'center',
-        marginHorizontal:20,
-        marginVertical:20,
-    },
-    legend:{
-        justifyContent:'space-around',
-        marginVertical:20,
-    }
-    
-});

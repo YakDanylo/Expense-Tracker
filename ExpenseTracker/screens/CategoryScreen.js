@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import DayTransactionsInfo from '../UI/DayTransactionsInfo'
 import { COLORS } from '../constants/COLORS'
 import {MY_IP} from '@env'
-
+import { ThemeContext } from '../context/ThemeContext'
 function groupByDayOfMonth(objects) {
     const groups = {};
   
@@ -28,6 +28,7 @@ const CategoryScreen = ({route}) => {
     const {value,choosedMonth,name} = route.params
     const {user} = useContext(AuthContext)
     const [transactions,setTransactions] = useState([])
+    const {theme} = useContext(ThemeContext)
     useEffect(() => {
         fetch(`http://${MY_IP}:3000/getbycategory?month=${choosedMonth}&userId=${user._id}&category=${value}`)
         .then((response) => {
@@ -57,16 +58,89 @@ const CategoryScreen = ({route}) => {
         }
         return expense
       }
+
+      const styles = StyleSheet.create({
+        wrapper:{
+            flex:1,
+            backgroundColor:theme.primary,
+            marginTop:0,
+        },
+        header:{
+            justifyContent:'center',
+            alignItems:'center',
+        },
+        totalDayInfo: {
+            flexDirection: "row",
+            marginHorizontal:5 ,
+            marginVertical:5,
+            justifyContent: "space-between",
+        },
+        itemsDayContainer: {
+            flex: 1,
+            backgroundColor: "white",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 10,
+            borderRadius:8,
+            alignItems: "center",
+        },
+        outerWrapper:{
+            backgroundColor:'white',
+            marginVertical:10,
+            marginHorizontal:10,
+            borderRadius:10,
+            overflow:Platform.OS=='ios'?'':'hidden',
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 3,
+                },
+            shadowOpacity: 0.3,
+            shadowRadius: 1,
+            elevation: 7,
+            },
+    
+            dayOfMonth:{
+                fontSize:16,
+                fontWeight:'bold',
+                color:'white',
+                backgroundColor:COLORS.accent100,
+                borderRadius:10,
+                padding:3,
+                marginLeft:5,
+                marginRight:10,
+                marginTop:3,
+                overflow:'hidden'
+            },
+            monthInfo:{
+                flexDirection:'row',
+                justifyContent:'space-around',
+                padding:5,
+                marginHorizontal:15,
+                borderRadius:10,
+                marginTop:10,
+                backgroundColor:theme.secondary,
+                shadowColor: "#000",
+                  shadowOffset: {
+                      width: 0, 
+                      height: 3,
+                      },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 1,
+                  elevation: 7,
+              },
+    })
+
   return (
     <View style={styles.wrapper}>
         <View style={styles.header}>
-        <Text style={{fontSize:24}}>{name}</Text>
+        <Text style={{fontSize:24,color:theme.opposite}}>{name}</Text>
         
         </View>
         <View style={styles.monthInfo}>
             <View style={styles.balanceWrapper}>
                 <Text style={{color:'red'}}>{count()}₴</Text>
-                <Text>Витрати</Text>
+                <Text style={{color:theme.opposite}}>Витрати</Text>
             </View>
         </View>
     <ScrollView>
@@ -77,76 +151,5 @@ const CategoryScreen = ({route}) => {
     </View>
   )
 }
-const styles = StyleSheet.create({
-    wrapper:{
-        flex:1,
-        backgroundColor:COLORS.background100,
-        marginTop:10,
-    },
-    header:{
-        justifyContent:'center',
-        alignItems:'center',
-    },
-    totalDayInfo: {
-        flexDirection: "row",
-        marginHorizontal:5 ,
-        marginVertical:5,
-        justifyContent: "space-between",
-        
-    },
-    itemsDayContainer: {
-        flex: 1,
-        backgroundColor: "white",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        padding: 10,
-        borderRadius:8,
-        alignItems: "center",
-    },
-    outerWrapper:{
-        backgroundColor:'white',
-        marginVertical:10,
-        marginHorizontal:10,
-        borderRadius:10,
-        overflow:Platform.OS=='ios'?'':'hidden',
-        shadowColor: "#000",
-        shadowOffset: {
-	        width: 0,
-	        height: 3,
-            },
-        shadowOpacity: 0.3,
-        shadowRadius: 1,
-        elevation: 7,
-        },
 
-        dayOfMonth:{
-            fontSize:16,
-            fontWeight:'bold',
-            color:'white',
-            backgroundColor:COLORS.accent100,
-            borderRadius:10,
-            padding:3,
-            marginLeft:5,
-            marginRight:10,
-            marginTop:3,
-            overflow:'hidden'
-        },
-        monthInfo:{
-            flexDirection:'row',
-            justifyContent:'space-around',
-            padding:5,
-            marginHorizontal:15,
-            borderRadius:10,
-            marginTop:10,
-            backgroundColor:'white',
-            shadowColor: "#000",
-              shadowOffset: {
-                  width: 0, 
-                  height: 3,
-                  },
-              shadowOpacity: 0.3,
-              shadowRadius: 1,
-              elevation: 7,
-          },
-})
 export default CategoryScreen

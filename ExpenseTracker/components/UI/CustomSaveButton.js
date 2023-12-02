@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Pressable, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants/COLORS';
 
-const CustomSaveButton = ({ title, onPress }) => {
+const CustomSaveButton = ({ title, onPress}) => {
   return (
     <Pressable
       style={({ pressed }) => [

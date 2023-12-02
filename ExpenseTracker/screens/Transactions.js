@@ -6,11 +6,12 @@ import DayTransactionsInfo from "../UI/DayTransactionsInfo"
 import { StyleSheet} from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import CustomIconButton from "../UI/CustomIconButton"
-import { useEffect,useState,useContext } from "react"
 import { AuthContext } from "../context/AuthContext"
 import { COLORS } from "../constants/COLORS"
 import { useIsFocused } from "@react-navigation/native"
 import {MY_IP} from '@env'
+import { useEffect,useState,useContext } from "react"
+import { ThemeContext } from "../context/ThemeContext"
 function groupByDayOfMonth(objects) {
   const groups = {};
 
@@ -37,6 +38,8 @@ const Transactions = ({navigation}) => {
     const [data,setData] = useState([]) 
     const {user} = useContext(AuthContext)
     const isFocused = useIsFocused()
+    const {theme} = useContext(ThemeContext)
+    let colors = {}
     useEffect(() => {
         fetch(`http://${MY_IP}:3000/get?month=${choosedMonth}&userId=${user._id}`)
           .then((response) => {
@@ -97,25 +100,60 @@ const Transactions = ({navigation}) => {
         }
         return [income,expense]
       }
+
+
+      const styles = StyleSheet.create({
+        monthPickerContainer:{
+            justifyContent:'space-between',
+            alignItems:'center',
+            flexDirection:'row',
+            marginHorizontal:15,
+        },
+        monthInfo:{
+          flexDirection:'row',
+          justifyContent:'space-around',
+          padding:5,
+          marginHorizontal:15,
+          borderRadius:10,
+          marginTop:10,
+          backgroundColor:theme.secondary,
+          shadowColor: "#000",
+            shadowOffset: {
+              width: 0, 
+              height: 3,
+                },
+            shadowOpacity: 0.3,
+            shadowRadius: 1,
+            elevation: 7,
+        },
+        balanceWrapper:{
+          alignItems:'center',
+          justifyContent:'center',
+          padding:5,
+        }
+    })
+
+
   return (
+    <View style={{flex:1,backgroundColor:theme.primary}}>
     <View style={{marginTop:60,marginBottom:30}}>
         <View style={styles.monthPickerContainer}>
-            <CustomIconButton icon="chevron-back" size={32} onPress={previousMonth}  />
-            <Text style={{fontSize:24, fontWeight:'bold'}}>{Months[choosedMonth]}</Text>
-            <CustomIconButton icon="chevron-forward" size={32} onPress={nextMonth} />
+            <CustomIconButton icon="chevron-back" size={32} onPress={previousMonth} color={theme.opposite}  />
+            <Text style={{fontSize:24, fontWeight:'bold', color:theme.opposite}}>{Months[choosedMonth]}</Text>
+            <CustomIconButton icon="chevron-forward" size={32} onPress={nextMonth} color={theme.opposite} />
         </View>
         <View style={styles.monthInfo}>
           <View style={styles.balanceWrapper}>
-          <Text style={{color:'green'}}>{count()[0]}₴</Text>
-          <Text>Дохід</Text>
+          <Text style={{color:'green',}}>{count()[0]}₴</Text>
+          <Text style={{color:theme.opposite}}>Дохід</Text>
           </View>
           <View style={styles.balanceWrapper}>
           <Text style={{color:'red'}}>{count()[1]}₴</Text>
-          <Text>Витрати</Text>
+          <Text style={{color:theme.opposite}}>Витрати</Text>
           </View>
           <View style={styles.balanceWrapper}>
           <Text style={{color:COLORS.accent100}}>{count()[0]-count()[1]}₴</Text>
-          <Text>Баланс</Text>
+          <Text style={{color:theme.opposite}}>Баланс</Text>
           </View>
         </View>
           <ScrollView>
@@ -124,38 +162,9 @@ const Transactions = ({navigation}) => {
               })}
           </ScrollView>
     </View>
+    </View>
   )
 }
 
 export default Transactions
 
-const styles = StyleSheet.create({
-    monthPickerContainer:{
-        justifyContent:'space-between',
-        alignItems:'center',
-        flexDirection:'row',
-        marginHorizontal:15,
-    },
-    monthInfo:{
-      flexDirection:'row',
-      justifyContent:'space-around',
-      padding:5,
-      marginHorizontal:15,
-      borderRadius:10,
-      marginTop:10,
-      backgroundColor:'white',
-      shadowColor: "#000",
-        shadowOffset: {
-	        width: 0, 
-	        height: 3,
-            },
-        shadowOpacity: 0.3,
-        shadowRadius: 1,
-        elevation: 7,
-    },
-    balanceWrapper:{
-      alignItems:'center',
-      justifyContent:'center',
-      padding:5,
-    }
-})

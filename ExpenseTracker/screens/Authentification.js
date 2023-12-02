@@ -19,8 +19,18 @@ const Authentification = ({auth}) => {
 
         if(!isRegistered)
         {
-            // console.log(userInfo,"here")
+
             // User registration
+            if(userInfo.password.length<6)
+            {
+                alert("Пароль повинен містити не менше 6 символів")
+                return
+            }
+            if(userInfo.email.indexOf("@")==-1)
+            {
+                alert("Невірний формат електронної пошти")
+                return
+            }
             fetch(`http://${MY_IP}:3000/register`,{
                 method:"POST",
                 headers:{
@@ -52,14 +62,15 @@ const Authentification = ({auth}) => {
             fetch(`http://${MY_IP}:3000/login?email=${userInfo.email}&password=${userInfo.password}`)
             .then((response) => {
                 if (!response.ok) {
+                    
                     throw new Error("Network response was not ok");
+                    
                 }
                 return response.json(); 
                 })
                 .then((resp) => {
                     if(resp)
                     {
-                        
                         setUser(resp)
                     }
                     else 

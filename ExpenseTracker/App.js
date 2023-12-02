@@ -5,12 +5,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import Authentification from "./screens/Authentification";
 import { AuthProvider} from "./context/AuthContext";
 import { StatusBar } from "expo-status-bar";
+import { ThemeProvider } from "./context/ThemeContext";
+import { ThemeContext } from "./context/ThemeContext";
 export default function App() {
-
   return (
     <AuthProvider>
-      <StatusBar/>
-      <AppNav/>
-  </AuthProvider>
+      <ThemeProvider>
+        <AppNav />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

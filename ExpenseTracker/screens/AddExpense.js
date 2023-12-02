@@ -5,6 +5,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import CustomSaveButton from "../components/UI/CustomSaveButton";
 import { AuthContext } from "../context/AuthContext";
 import {MY_IP} from '@env'
+import { ThemeContext } from "../context/ThemeContext";
 const AddExpense = () => {
     const [typeOfInput,setTypeOfInput] = useState('expense')
     const [date, setDate] = useState(new Date());
@@ -13,6 +14,7 @@ const AddExpense = () => {
     const [transaction, setTransaction] = useState({transType:'expense',title:'',category:'',amount:'', date:new Date()})
     const [isFocus, setIsFocus] = useState(false);
     const {user} = useContext(AuthContext)
+    const {theme} = useContext(ThemeContext)
     const categoriesOfExpense = [
         { label: "Їжа", value: 'Food' },
         { label: "Транспорт", value: 'Transport' },
@@ -21,7 +23,6 @@ const AddExpense = () => {
         { label: "Розваги", value: 'Clothes' },
         { label: "Здоров'я", value: 'Health' },
         { label: "Освіта", value: 'Health' },
-
         { label: "Інше", value: 'Other' }
     ];
     const categoriesOfIncone = [
@@ -87,9 +88,133 @@ const AddExpense = () => {
         });
         setTransaction({ ...transaction, title: '', category: '', amount: '', date: new Date() });
       }
+
+
+      const styles = StyleSheet.create({
+        wrapper:{
+            marginTop:60,
+            alignItems:'center',
+            justifyContent:'center',
+        },
+        controlButton:{
+            flexDirection:"row",
+            backgroundColor:theme.secondary,
+            paddingHorizontal:40,
+            paddingVertical:10,
+            borderRadius:8,
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0, 
+                height: 2,
+                },
+            shadowOpacity: 0.5,
+            shadowRadius: 2,
+            elevation: 7,
+        },
+        incomeButton:{
+            borderWidth:2,
+            borderColor:'#21b032',
+            padding:8,
+            marginHorizontal:20,
+            borderRadius:8,
+        },
+        expenseButton:{
+            borderWidth:2,
+            borderColor:'#e02d45',
+            padding:8,
+            marginHorizontal:20,
+            borderRadius:8,
+        },
+        incomeText:{
+            fontSize:24,
+            color:theme.opposite,
+        },
+        expenseText:{
+            fontSize:24,
+            color:theme.opposite,
+        },
+        incomeActive:{
+            backgroundColor:'#21b032',
+        },
+        incomeActiveText:{
+            color:'white'
+        },
+        expenseActive:{
+            backgroundColor:'#e02d45',
+        },
+        expenseActiveText:{
+            color:'white'
+            
+        },
+        input: {
+            flex: 1, // Використовуйте flex: 1, щоб input розширювався на залишок доступного простору
+            height: 50,
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            fontSize: 24,
+            color:theme.opposite,
+          },
+        inputWrapper:{
+            width:'96%',
+            alignItems:'center',
+            justifyContent:'center',
+            marginTop:20,
+            backgroundColor:theme.secondary,
+            padding:20,
+            borderRadius:8,
+          shadowColor: "#000",
+            shadowOffset: {
+                width: 0, 
+                height: 2,
+                },
+            shadowOpacity: 0.8,
+            shadowRadius: 1,
+            elevation: 7,
+        },
+        inputContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 10, // Додавання відступу між кожним input
+            width: '100%',
+            color: theme.opposite,
+          },
+          label: {
+            marginTop:10,
+            marginLeft: 5,
+            fontSize: 20, 
+            color: theme.opposite,
+          },
+          button:{
+            marginTop:10,
+          },
+          datePicker:{
+            height:120,
+            marginTop:-10,
+          },
+          dropdown:{
+                width:250,
+                height:50,
+                borderBottomColor: theme.opposite,
+                borderBottomWidth: 1,
+                fontSize: 34,
+                color:theme.opposite,
+          },
+          dropdownSelectedText:{
+            fontSize: 24,
+            color:theme.opposite,
+            backgroundColor:theme.secondary,
+          },
+          inputView:{
+            flex:1,
+            height:50,
+          }
+    })
+
+
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()} accessible={false}>
-    <View style={{flex:1}}>
+    <View style={{flex:1, backgroundColor:theme.primary}}>
     <View style = {styles.wrapper}>
         <View style={styles.controlButton}>
             <Pressable onPress={()=>
@@ -149,7 +274,7 @@ const AddExpense = () => {
                      placeholder={!isFocus ? 'Виберіть категорію' : '...'}
                      onFocus={() => setIsFocus(true)}
                      onBlur={() => setIsFocus(false)}
-                     placeholderStyle={{color: 'black', fontSize: 24}}
+                     placeholderStyle={{color: theme.opposite, fontSize: 24}}
                      />
                      :
                      <Dropdown
@@ -164,7 +289,7 @@ const AddExpense = () => {
                      placeholder={!isFocus ? 'Виберіть категорію' : '...'}
                      onFocus={() => setIsFocus(true)}
                      onBlur={() => setIsFocus(false)}
-                     placeholderStyle={{color: 'black', fontSize: 24}}
+                     placeholderStyle={{color: theme.opposite, fontSize: 24,}}
                      />}
                    
                     </View>
@@ -178,7 +303,7 @@ const AddExpense = () => {
                     
                     
                     </View>
-                    <View style={styles.button} >
+                    <View style={styles.button}>
                         <CustomSaveButton title="Зберегти" onPress={handleTransaction}/>
                     </View>
             </View>
@@ -191,116 +316,3 @@ const AddExpense = () => {
 
 export default AddExpense
 
-const styles = StyleSheet.create({
-    wrapper:{
-        marginTop:60,
-        alignItems:'center',
-        justifyContent:'center',
-    },
-    controlButton:{
-        flexDirection:"row",
-        backgroundColor:'white',
-        paddingHorizontal:40,
-        paddingVertical:10,
-        borderRadius:8,
-        shadowColor: "#000",
-        shadowOffset: {
-	        width: 0, 
-	        height: 2,
-            },
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
-        elevation: 7,
-    },
-    incomeButton:{
-        borderWidth:2,
-        borderColor:'#21b032',
-        padding:8,
-        marginHorizontal:20,
-        borderRadius:8,
-    },
-    expenseButton:{
-        borderWidth:2,
-        borderColor:'#e02d45',
-        padding:8,
-        marginHorizontal:20,
-        borderRadius:8,
-    },
-    incomeText:{
-        fontSize:24,
-    },
-    expenseText:{
-        fontSize:24,
-    },
-    incomeActive:{
-        backgroundColor:'#21b032',
-    },
-    incomeActiveText:{
-        color:'white'
-    },
-    expenseActive:{
-        backgroundColor:'#e02d45',
-    },
-    expenseActiveText:{
-        color:'white'
-    },
-    input: {
-        flex: 1, // Використовуйте flex: 1, щоб input розширювався на залишок доступного простору
-        height: 50,
-        borderBottomColor: 'black',
-        borderBottomWidth: 1,
-        fontSize: 24,
-      },
-    inputWrapper:{
-        width:'96%',
-        alignItems:'center',
-        justifyContent:'center',
-        marginTop:20,
-        backgroundColor:'white',
-        padding:20,
-        borderRadius:8,
-        backgroundColor:'white',
-      shadowColor: "#000",
-        shadowOffset: {
-	        width: 0, 
-	        height: 2,
-            },
-        shadowOpacity: 0.8,
-        shadowRadius: 1,
-        elevation: 7,
-    },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 10, // Додавання відступу між кожним input
-        width: '100%',
-      },
-      label: {
-        marginTop:10,
-        marginLeft: 5,
-        fontSize: 20, // Розмір тексту для мітки
-      },
-      button:{
-        marginTop:10,
-        
-      },
-      datePicker:{
-        height:120,
-        marginTop:-10,
-      },
-      dropdown:{
-            width:250,
-            height:50,
-            borderBottomColor: 'black',
-            borderBottomWidth: 1,
-            fontSize: 34,
-      },
-      dropdownSelectedText:{
-        fontSize: 24,
-      },
-      inputView:{
-        flex:1,
-        height:50,
-      }
-})

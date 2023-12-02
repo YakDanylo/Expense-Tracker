@@ -7,9 +7,13 @@ import { AuthContext } from '../context/AuthContext'
 import React,{useContext, useEffect,useState} from 'react'
 import { useIsFocused } from '@react-navigation/native'
 import {MY_IP} from '@env'
+import { ThemeContext } from '../context/ThemeContext'
+import {darkThemeColors} from '../constants/darkThemeColors'
+import {whiteThemeColors} from '../constants/whiteThemeColors'
   const Months = ["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
 const Home = () => {
     const {user} = useContext(AuthContext)
+    const {theme} = useContext(ThemeContext)
     const [transactionsValues,setTransactionsValues] = useState({income:0,expense:0})
     const [choosedMonth,setChoosedMonth] = useState(new Date().getMonth())
     const isFocused = useIsFocused()
@@ -29,15 +33,58 @@ const Home = () => {
             });
     }, [isFocused])
 
+
+    const styles = StyleSheet.create({
+        userGreetingContainer:{
+            marginTop:50,
+            flexDirection:'row',
+            justifyContent:'space-between',
+            alignItems:'center',
+            marginHorizontal:20,
+        },
+        greetingContainer:{
+            flexDirection:'column'
+        },
+        userImage:{
+            width:30,
+            height:30,
+        },
+        currentBalanceContainer:{
+            backgroundColor:"#5844e6",
+            flexDirection:'row',
+            justifyContent:'space-between',
+            marginTop:20,
+            borderRadius:10,
+            marginHorizontal:20,
+            padding:40,
+        },
+        moneyContainer:{
+            marginRight:5,
+        },
+        circle:{
+            paddingHorizontal:30,
+            paddingVertical:20,
+            borderRadius:1000,
+            borderTopColor:'yellow',
+            borderTopWidth:2,
+            backgroundColor:'red'
+        },
+        circleContainer:{
+            justifyContent:'center',
+            alignItems:'center'
+        }
+    })
+
   return (
-    <ScrollView>
+    <View style={{flex:1,backgroundColor:theme.primary}}>
+    <ScrollView >
         <View style={styles.userGreetingContainer}>
             <Image style={styles.userImage} source={require("../assets/UserImage.png")} />
             <View style={styles.greetingContainer}>
-            <Text>Welcome back </Text>
-            <Text>{user.email}</Text>
+            <Text style={{color:theme.opposite, fontSize:20}}>Welcome back </Text>
+            <Text style={{color:theme.opposite,fontSize:18}}>{user.email}</Text>
             </View>
-            <Ionicons name='notifications-sharp' size={24}/>
+            <Ionicons name='notifications-sharp' size={24} color={theme.opposite}/>
         </View>
         <View style={styles.currentBalanceContainer}>
             <View style={styles.balanceTextContainer}>
@@ -66,48 +113,10 @@ const Home = () => {
             <MonthStatistics month = {choosedMonth}/>
         </View>
     </ScrollView>
+    </View>
   )
+  
 }
 
 export default Home
 
-const styles = StyleSheet.create({
-    userGreetingContainer:{
-        marginTop:50,
-        flexDirection:'row',
-        justifyContent:'space-between',
-        alignItems:'center',
-        marginHorizontal:20,
-    },
-    greetingContainer:{
-        flexDirection:'column'
-    },
-    userImage:{
-        width:30,
-        height:30,
-    },
-    currentBalanceContainer:{
-        backgroundColor:"#5844e6",
-        flexDirection:'row',
-        justifyContent:'space-between',
-        marginTop:20,
-        borderRadius:10,
-        marginHorizontal:20,
-        padding:40,
-    },
-    moneyContainer:{
-        marginRight:5,
-    },
-    circle:{
-        paddingHorizontal:30,
-        paddingVertical:20,
-        borderRadius:1000,
-        borderTopColor:'yellow',
-        borderTopWidth:2,
-        backgroundColor:'red'
-    },
-    circleContainer:{
-        justifyContent:'center',
-        alignItems:'center'
-    }
-})

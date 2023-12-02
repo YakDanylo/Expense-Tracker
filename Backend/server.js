@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, MongoNetworkTimeoutError, ObjectId } = require('mongodb');
 const dotenv = require('dotenv');
 dotenv.config();
 const uri = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@cluster1.rqnkebz.mongodb.net/?retryWrites=true&w=majority`;
@@ -89,6 +89,25 @@ app.get("/getcategoriesvalues", (req,res) => {
   })
 })
 
+app.get("/gettotalinfo" , (req,res) => {
+  const {userId} = req.query
+  const data = getTotalInfo(userId)
+  data.then((result) => {
+    res.send(result)
+  })
+})
+
+app.put("/edittransaction", (req,res) => {
+  const {id,title,amount} = req.body
+  const data = editTransaction(id,title,amount)
+})
+
+app.delete("/deletetransaction", (req,res) => {
+  const {id} = req.body
+  const data = deleteTransaction(id)
+})
+
+
 async function getCategoriesValues(month,userId) {
   month++
   const transactions = client.db().collection(`transactions`);
@@ -175,6 +194,46 @@ function count(value){
 
 }
 
+async function getTotalInfo(userId)
+{
+  const transactions = client.db().collection(`transactions`);
+  const startOfYear = new Date(new Date().getFullYear(),0,1)
+  const endOfYear = new Date(new Date().getFullYear(), 12 ,1)
+  const result = await transactions.find({date:{$gt:startOfYear,$lt:endOfYear}, userId:userId}).toArray()
+  const temp = countYearExpenses(result)
+  return temp
+}
+
+async function editTransaction(id,title,amount)
+{
+  const transactions = client.db().collection(`transactions`);
+  const result = await transactions.updateOne({_id:ObjectId(id)},{$set:{title:title,amount:+amount}})
+}
+
+async function deleteTransaction(id)
+{
+  const transactions = client.db().collection(`transactions`);
+  const result = await transactions.deleteOne({_id:ObjectId(id)})
+}
+
+function countYearExpenses(transactions) {
+  let yearExpenses = [0,0,0,0,0,0,0,0,0,0,0,0]
+  let yearIncome = [0,0,0,0,0,0,0,0,0,0,0,0]
+  for(let i=0;i<transactions.length;i++)
+  {
+    let month = transactions[i].date.getMonth()
+    let amount = transactions[i].amount
+    if(transactions[i].transType==='expense')
+    {
+      yearExpenses[month]+=amount
+    }
+    else if(transactions[i].transType==='income')
+    {
+      yearIncome[month]+=amount
+    }
+  }
+  return [yearExpenses,yearIncome]
+}
 
 run().catch(console.dir);
 
